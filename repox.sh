@@ -44,9 +44,7 @@ function viewStatus {
 }
 
 function showUsage {
-	echo ""
-	echo "Usage: repos {add|view}"
-	echo ""
+	printf "\nUsage: repos {add|view}\n"
 	echo "Commands:"
 	printf "\t$COMMAND_ADD\tMonitor current folder's parent repository for status and updates\n"
 	printf "\t$COMMAND_VIEW_STATUS\tView status of monitored repositories\n"
