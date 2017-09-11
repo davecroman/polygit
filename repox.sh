@@ -10,6 +10,8 @@ PROFILE_FILE="$REPOX_DIR/profile.conf"
 
 # commands
 COMMAND_ADD="add"
+COMMAND_MAIN="repox"
+COMMAND_LIST="list"
 COMMAND_VIEW_STATUS="view"
 
 #==================================================
@@ -18,29 +20,35 @@ COMMAND_VIEW_STATUS="view"
 function init {
 	if [ ! -d "$REPOX_DIR" ]; then
 		echo "Creating repox directory"
-		mkdir ~/.repox
+		mkdir $REPOX_DIR
 	fi
 
 	if [ ! -f "$PROFILE_FILE" ]; then
 		echo "Creating profile.conf"
-		touch profile.conf
+		touch $PROFILE_FILE
 	fi
 }
 
 function register {
 	if ! git status >& /dev/null; then
-  		echo "This folder is not a repo"
+  		echo "error: This folder is not a repo."
+  		exitValue=1
+  		return 1
 	fi
 
 	rootDir="$(git rev-parse --show-toplevel)"
-	rootDir=$(basename $rootDir)
 
-	(echo $rootDir | tee $PROFILE_FILE)
-	echo "Repo successfully registered"
+	if grep -q $rootDir $PROFILE_FILE; then
+        echo "This repo directory has already been added."
+    else
+        echo "Successfully added repo directory:"
+        printf "(+) "
+        (printf "$rootDir" | tee -a $PROFILE_FILE)
+	fi
 }
 
 function viewStatus {
-	echo "Status"
+	fetchRepos
 }
 
 function showUsage {
@@ -51,11 +59,39 @@ function showUsage {
 }
 
 function fetchRepos {
-	repos=$1
+    loadRepoList
+    echo "Fetching..."
 	for repo in "${repos[@]}"; do
-		(echo $repo; cd $repo; git fetch) &
+        (
+            cd $repo;
+            result=$(git fetch);
+            echo "Fetched $repo: $result"
+        ) &
 	done
 	wait
+}
+
+function listRepos {
+    loadRepoList
+
+    if [ ${#repos[@]} -eq 0 ]; then
+        printf "You have no repos added.\nAdd one now by running this in your repo's directory:\n\n"
+        printf "\t$COMMAND_MAIN $COMMAND_ADD"
+        return
+    else
+        for repo in "${repos[@]}"; do
+            echo "$repo"
+	    done
+    fi
+}
+
+function loadRepoList {
+    filelines=`cat $PROFILE_FILE`
+    for line in $filelines ; do
+        if [ -n "$line" ]; then
+            repos+=("$line")
+        fi
+    done
 }
 
 #==================================================
@@ -64,17 +100,19 @@ function fetchRepos {
 
 exitValue=0
 
+init
 case $1 in
 	$COMMAND_ADD )
 		register ;;
 	$COMMAND_VIEW_STATUS )
 		viewStatus ;;
+    $COMMAND_LIST )
+        listRepos ;;
 	* )
-		echo "fatal: Unknown command or no command supplied."
+		echo "error: Unknown command or no command supplied."
 		showUsage
 		exitValue=1 ;;
 esac
 
-printf "\nExiting: $exitValue"
 exit $exitValue
 
