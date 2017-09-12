@@ -70,13 +70,30 @@ function showUsage {
 function fetchRepos {
     loadRepoList
     echo "Fetching..."
+    echo "=========================================================================================================="
+    printf "%25.25s|\t%30.30s|\t%s\n" "REPO" "BRANCH NAME" "STATUS"
+    echo "=========================================================================================================="
 	for repo in "${repos[@]}"; do
         (
             cd $repo;
             currentBranch=$(git rev-parse --abbrev-ref HEAD)
             repoName=$(basename `git rev-parse --show-toplevel`)
-            result=$(git fetch);
-            echo "$repoName [$currentBranch]"
+            result=$(git fetch >& /dev/null);
+            branch_result=$(git status)
+            if grep -q "Your branch is ahead of" <<< $branch_result; then
+                status="AHEAD";
+            elif grep -q "Your branch is up-to-date" <<< $branch_result; then
+                status="UP TO DATE";
+            elif grep -q "nothing to commit, working tree clean" <<< $branch_result; then
+                status="NO CHANGES";
+            elif grep -q "Your branch is behind" <<< $branch_result; then
+                status="BEHIND";
+            elif grep -q "have diverged" <<< $branch_result; then
+                status="DIVERGED";
+            else
+                status="UNKNOWN"
+            fi
+            printf "%25.25s|\t%30.30s|\t$status\n" $repoName $currentBranch
         ) &
 	done
 	wait
