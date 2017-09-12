@@ -29,6 +29,13 @@ STATUS_NO_CHANGES="NO CHANGES"
 STATUS_UNKNOWN="UNKNOWN"
 STATUS_UP_TO_DATE="UP TO DATE"
 
+# status indicators
+INDICATOR_AHEAD="Your branch is ahead of"
+INDICATOR_BEHIND="Your branch is behind"
+INDICATOR_DIVERGED="have diverged"
+INDICATOR_NO_CHANGES="nothing to commit, working tree clean"
+INDICATOR_UP_TO_DATE="Your branch is up-to-date"
+
 # colors
 red=$'\e[1;31m'
 grn=$'\e[1;32m'
@@ -71,7 +78,13 @@ function register {
 }
 
 function viewStatus {
-	fetchRepos
+    loadRepoList
+    if [ ${#repos[@]} -ge 1 ]; then
+        fetchRepos
+    else
+        showNoReposMessage
+    fi
+
 }
 
 function showUsage {
@@ -84,7 +97,6 @@ function showUsage {
 }
 
 function fetchRepos {
-    loadRepoList
     echo "Fetching..."
     echo "================================================================================"
     printf "%25.25s|\t%30.30s|\t%s\n" "REPO" "CURRENT BRANCH" "STATUS"
@@ -104,19 +116,19 @@ function fetchRepos {
 }
 
 function getStatus {
-    if grep -q "Your branch is ahead of" <<< $branchStatus; then
+    if grep -q "$INDICATOR_AHEAD" <<< $branchStatus; then
         status=$STATUS_AHEAD;
         statusColor=${grn}
-    elif grep -q "Your branch is up-to-date" <<< $branchStatus; then
+    elif grep -q "$INDICATOR_UP_TO_DATE" <<< $branchStatus; then
         status=$STATUS_UP_TO_DATE;
         statusColor=${gry}
-    elif grep -q "nothing to commit, working tree clean" <<< $branchStatus; then
+    elif grep -q "$INDICATOR_NO_CHANGES" <<< $branchStatus; then
         status=$STATUS_NO_CHANGES;
         statusColor=${gry}
-    elif grep -q "Your branch is behind" <<< $branchStatus; then
+    elif grep -q "$INDICATOR_BEHIND" <<< $branchStatus; then
         status=$STATUS_BEHIND;
         statusColor=${red}
-    elif grep -q "have diverged" <<< $branchStatus; then
+    elif grep -q "$INDICATOR_DIVERGED" <<< $branchStatus; then
         status=$STATUS_DIVERGED;
         statusColor=${red}
     else
@@ -127,10 +139,8 @@ function getStatus {
 
 function listRepos {
     loadRepoList
-
     if [ ${#repos[@]} -eq 0 ]; then
-        printf "You have no repos added.\nAdd one now by running this in your repo's directory:\n\n"
-        printf "\t$COMMAND_MAIN $COMMAND_ADD"
+        showNoReposMessage
         return
     else
         for repo in "${repos[@]}"; do
@@ -151,6 +161,11 @@ function loadRepoList {
 function reset {
     rm -rf $REPOX_DIR
     echo "$ICON_SUCCESS Removed all repo dirs from monitoring."
+}
+
+function showNoReposMessage {
+    printf "You have no repos added.\nAdd one now by running this in your repo's directory:\n\n"
+    printf "\t$COMMAND_MAIN $COMMAND_ADD"
 }
 
 #==================================================
