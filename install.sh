@@ -2,8 +2,7 @@
 
 echo "Installing..."
 
-alias repox=./repox.sh
+cp repox.sh /usr/local/bin/repox
+chmod +x /usr/local/bin/repox
 
-# TODO: Use source and verify installation worked
 echo "Successfully installed. Start using repox now"
-

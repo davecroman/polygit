@@ -150,7 +150,7 @@ function listRepos {
 }
 
 function loadRepoList {
-    filelines=`cat $PROFILE_FILE`
+    filelines=`sort $PROFILE_FILE`
     for line in $filelines ; do
         if [ -n "$line" ]; then
             repos+=("$line")
