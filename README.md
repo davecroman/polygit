@@ -1,6 +1,6 @@
-# Repox
+# PolyGit
 
-A simple script to monitor multiple Git repositories in parallel using the terminal.
+A simple script to track and update multiple Git repositories in parallel using the terminal.
 
 ## Installation
 
@@ -20,7 +20,7 @@ A simple script to monitor multiple Git repositories in parallel using the termi
 
 ```
 cd {directory of Git repository}
-repox add
+polygit add
 ```
 
 You can add as many repositories as you want.
@@ -30,13 +30,13 @@ Note: Limits have not yet been explored.
 ### View list of monitored repositories
 
 ```
-repox list
+polygit list
 ```
 
 ### View status of all monitored repositories in their current branches
 
 ```
-repox view
+polygit view
 ```
 
 Sample Output:
@@ -55,5 +55,5 @@ Sample Output:
 ### Remove all repositories from montiroing
 
 ```
-repox reset
+polygit reset
 ```
