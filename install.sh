@@ -24,8 +24,6 @@ if (( $overwrite == 0 )); then
 fi
 
 echo "Installing..."
-cp $SCRIPT_FILE $TARGET_LOCATION
-
 if cp -rv $SCRIPT_FILE $TARGET_LOCATION; then
     printf "\n\tsuccess: file copied\n\n"
 else
