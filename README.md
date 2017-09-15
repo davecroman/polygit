@@ -6,11 +6,13 @@ A simple script to monitor multiple Git repositories in parallel using the termi
 
 1. Clone this repository
 2. From the terminal, go to the root directory of this repository
-3. Run the install script.
+3. Run the install script and follow the prompts
 
 ```
 ./install.sh
 ```
+
+`sudo` privileges may be required to copy the script into `/usr/local/bin/`. If so, run the install script with sudo.
 
 ## Usage
 

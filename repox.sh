@@ -13,7 +13,7 @@ COMMAND_ADD="add"
 COMMAND_MAIN="repox"
 COMMAND_LIST="list"
 COMMAND_RESET="reset"
-COMMAND_VIEW_STATUS="view"
+COMMAND_VIEW_STATUS="status"
 
 # others
 SEPARATOR="\n"
@@ -43,6 +43,10 @@ yel=$'\e[1;33m'
 blu=$'\e[1;34m'
 gry=$'\e[0;37m'
 end=$'\e[0m'
+
+# status table
+COLSIZE_REPO=25
+COLSIZE_BRANCH=25
 
 #==================================================
 # FUNCTIONS
@@ -99,7 +103,7 @@ function showUsage {
 function fetchRepos {
     echo "Fetching..."
     echo "================================================================================"
-    printf "%25.25s|\t%30.30s|\t%s\n" "REPO" "CURRENT BRANCH" "STATUS"
+    printf "%${COLSIZE_REPO}.${COLSIZE_REPO}s|\t%${COLSIZE_BRANCH}.${COLSIZE_BRANCH}s|\t%s\n" "REPO" "CURRENT BRANCH" "STATUS"
     echo "================================================================================"
 	for repo in "${repos[@]}"; do
         (
@@ -109,7 +113,8 @@ function fetchRepos {
             git fetch >& /dev/null
             branchStatus=$(git status)
             getStatus
-            printf "%25.25s|\t%30.30s|\t%s$status${end}\n" $repoName $currentBranch $statusColor
+            printf "%${COLSIZE_REPO}.${COLSIZE_REPO}s|\t%${COLSIZE_BRANCH}.${COLSIZE_BRANCH}s|\t%s$status${end}\n" \
+                    $repoName $currentBranch $statusColor
         ) &
 	done
 	wait
@@ -165,7 +170,7 @@ function reset {
 
 function showNoReposMessage {
     printf "You have no repos added.\nAdd one now by running this in your repo's directory:\n\n"
-    printf "\t$COMMAND_MAIN $COMMAND_ADD"
+    printf "\t$COMMAND_MAIN $COMMAND_ADD\n"
 }
 
 #==================================================
