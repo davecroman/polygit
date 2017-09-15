@@ -4,13 +4,17 @@
 # CONSTANTS
 #==================================================
 
+PROJECT_NAME="PolyGit"
+COMMAND_NAME="polygit"
+
 # files and directories
-REPOX_DIR=~/.repox
-PROFILE_FILE="$REPOX_DIR/profile.conf"
+PROFILE_DIR=~/.${COMMAND_NAME}
+PROFILE_FILE="$PROFILE_DIR/profile.conf"
 
 # commands
 COMMAND_ADD="add"
-COMMAND_MAIN="repox"
+COMMAND_INIT="init"
+COMMAND_MAIN="${COMMAND_NAME}"
 COMMAND_LIST="list"
 COMMAND_RESET="reset"
 COMMAND_VIEW_STATUS="status"
@@ -52,9 +56,9 @@ COLSIZE_BRANCH=25
 # FUNCTIONS
 #==================================================
 function init {
-    if [ ! -d "$REPOX_DIR" ]; then
-        mkdir $REPOX_DIR
-        echo "$ICON_SUCCESS Repox directory created."
+    if [ ! -d "$PROFILE_DIR" ]; then
+        mkdir $PROFILE_DIR
+        echo "$ICON_SUCCESS $PROJECT_NAME directory created."
     fi
 
     if [ ! -f "$PROFILE_FILE" ]; then
@@ -164,7 +168,7 @@ function loadRepoList {
 }
 
 function reset {
-    rm -rf $REPOX_DIR
+    rm -rf $PROFILE_DIR
     echo "$ICON_SUCCESS Removed all repo dirs from monitoring."
 }
 
@@ -177,7 +181,6 @@ function showNoReposMessage {
 # MAIN ENTRY
 #==================================================
 
-
 if [ "$1" != "$COMMAND_RESET" ]; then
     init
 fi
@@ -185,6 +188,8 @@ fi
 case $1 in
     $COMMAND_ADD )
         register ;;
+    $COMMAND_INIT )
+        init ;;
     $COMMAND_VIEW_STATUS )
         viewStatus ;;
     $COMMAND_LIST )

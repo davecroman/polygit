@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-SCRIPT_FILE="repox.sh"
-TARGET_LOCATION="/usr/local/bin/repox"
+PROJECT_NAME="PolyGit"
+COMMAND_NAME="polygit"
+SCRIPT_FILE="${COMMAND_NAME}.sh"
+TARGET_LOCATION="/usr/local/bin/${COMMAND_NAME}"
 
 overwrite=0
 
@@ -31,10 +33,11 @@ else
     exit 1;
 fi
 
-result=$(which repox)
+result=$(which $COMMAND_NAME)
 
 if [ "$result" = "$TARGET_LOCATION" ]; then
-    echo "Successfully installed. You can start using repox now";
+    polygit init
+    echo "Successfully installed. You can start using ${COMMAND_NAME} now.";
 else
     echo "warning: $TARGET_LOCATION is not yet in your PATH"
 fi
