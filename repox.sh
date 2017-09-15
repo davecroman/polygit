@@ -94,7 +94,7 @@ function viewStatus {
 function showUsage {
 	printf "\nUsage: $COMMAND_MAIN {$COMMAND_ADD|$COMMAND_LIST|$COMMAND_RESET|$COMMAND_VIEW_STATUS}\n"
 	echo "Commands:"
-	printf "\t$COMMAND_ADD\tMonitor current folder's parent repository for status and updates\n"
+	printf "\t$COMMAND_ADD\tMonitor current folder's parent repository\n"
 	printf "\t$COMMAND_LIST\tList all repo directories being monitored\n"
 	printf "\t$COMMAND_RESET\tRemove all repo directories from monitoring\n"
 	printf "\t$COMMAND_VIEW_STATUS\tView status of monitored repositories\n"
