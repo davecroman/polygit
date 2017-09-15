@@ -52,33 +52,33 @@ COLSIZE_BRANCH=25
 # FUNCTIONS
 #==================================================
 function init {
-	if [ ! -d "$REPOX_DIR" ]; then
-		mkdir $REPOX_DIR
-		echo "$ICON_SUCCESS Repox directory created."
-	fi
+    if [ ! -d "$REPOX_DIR" ]; then
+        mkdir $REPOX_DIR
+        echo "$ICON_SUCCESS Repox directory created."
+    fi
 
-	if [ ! -f "$PROFILE_FILE" ]; then
-		touch $PROFILE_FILE
-		echo "$ICON_SUCCESS $(basename $PROFILE_FILE) file created."
-	fi
+    if [ ! -f "$PROFILE_FILE" ]; then
+        touch $PROFILE_FILE
+        echo "$ICON_SUCCESS $(basename $PROFILE_FILE) file created."
+    fi
 }
 
 function register {
-	if ! git status >& /dev/null; then
-  		echo "$ICON_ERROR This folder is not part of a repo."
-  		exitValue=1
-  		return 1
-	fi
+    if ! git status >& /dev/null; then
+        echo "$ICON_ERROR This folder is not part of a repo."
+        exitValue=1
+        return 1
+    fi
 
-	rootDir="$(git rev-parse --show-toplevel)"
+    rootDir="$(git rev-parse --show-toplevel)"
 
-	if grep -q $rootDir $PROFILE_FILE; then
+    if grep -q $rootDir $PROFILE_FILE; then
         echo "$ICON_WARN This repo directory has already been added."
     else
         echo "$ICON_SUCCESS Successfully added repo directory:"
         printf "(+) "
         (printf "$rootDir$SEPARATOR" | tee -a $PROFILE_FILE)
-	fi
+    fi
 }
 
 function viewStatus {
@@ -92,12 +92,12 @@ function viewStatus {
 }
 
 function showUsage {
-	printf "\nUsage: $COMMAND_MAIN {$COMMAND_ADD|$COMMAND_LIST|$COMMAND_RESET|$COMMAND_VIEW_STATUS}\n"
-	echo "Commands:"
-	printf "\t$COMMAND_ADD\tMonitor current folder's parent repository\n"
-	printf "\t$COMMAND_LIST\tList all repo directories being monitored\n"
-	printf "\t$COMMAND_RESET\tRemove all repo directories from monitoring\n"
-	printf "\t$COMMAND_VIEW_STATUS\tView status of monitored repositories\n"
+    printf "\nUsage: $COMMAND_MAIN {$COMMAND_ADD|$COMMAND_LIST|$COMMAND_RESET|$COMMAND_VIEW_STATUS}\n"
+    echo "Commands:"
+    printf "\t$COMMAND_ADD\tMonitor current folder's parent repository\n"
+    printf "\t$COMMAND_LIST\tList all repo directories being monitored\n"
+    printf "\t$COMMAND_RESET\tRemove all repo directories from monitoring\n"
+    printf "\t$COMMAND_VIEW_STATUS\tView status of monitored repositories\n"
 }
 
 function fetchRepos {
@@ -105,7 +105,7 @@ function fetchRepos {
     echo "================================================================================"
     printf "%${COLSIZE_REPO}.${COLSIZE_REPO}s|\t%${COLSIZE_BRANCH}.${COLSIZE_BRANCH}s|\t%s\n" "REPO" "CURRENT BRANCH" "STATUS"
     echo "================================================================================"
-	for repo in "${repos[@]}"; do
+    for repo in "${repos[@]}"; do
         (
             cd $repo;
             currentBranch=$(git rev-parse --abbrev-ref HEAD)
@@ -116,8 +116,8 @@ function fetchRepos {
             printf "%${COLSIZE_REPO}.${COLSIZE_REPO}s|\t%${COLSIZE_BRANCH}.${COLSIZE_BRANCH}s|\t%s$status${end}\n" \
                     $repoName $currentBranch $statusColor
         ) &
-	done
-	wait
+    done
+    wait
 }
 
 function getStatus {
@@ -150,7 +150,7 @@ function listRepos {
     else
         for repo in "${repos[@]}"; do
             echo "$repo"
-	    done
+        done
     fi
 }
 
@@ -183,18 +183,18 @@ if [ "$1" != "$COMMAND_RESET" ]; then
 fi
 
 case $1 in
-	$COMMAND_ADD )
-		register ;;
-	$COMMAND_VIEW_STATUS )
-		viewStatus ;;
+    $COMMAND_ADD )
+        register ;;
+    $COMMAND_VIEW_STATUS )
+        viewStatus ;;
     $COMMAND_LIST )
         listRepos ;;
     $COMMAND_RESET )
         reset ;;
-	* )
-		echo "$ICON_ERROR: Unknown command or no command supplied."
-		showUsage
-		exitValue=1 ;;
+    * )
+        echo "$ICON_ERROR: Unknown command or no command supplied."
+        showUsage
+        exitValue=1 ;;
 esac
 
 exit $exitValue
