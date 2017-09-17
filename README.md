@@ -30,13 +30,13 @@ Note: Limits have not yet been explored.
 ### View list of monitored repositories
 
 ```
-polygit status
+polygit list
 ```
 
 ### View status of all monitored repositories in their current branches
 
 ```
-polygit view
+polygit status
 ```
 
 Sample Output:
