@@ -106,9 +106,9 @@ function showUsage {
 
 function fetchRepos {
     echo "Fetching..."
-    echo "================================================================================"
-    printf "%${COLSIZE_REPO}.${COLSIZE_REPO}s|\t%${COLSIZE_BRANCH}.${COLSIZE_BRANCH}s|\t%s\n" "REPO" "CURRENT BRANCH" "STATUS"
-    echo "================================================================================"
+    echo "==================================================================="
+    printf "%${COLSIZE_REPO}.${COLSIZE_REPO}s| %${COLSIZE_BRANCH}.${COLSIZE_BRANCH}s| %s\n" "REPO" "CURRENT BRANCH" "STATUS"
+    echo "==================================================================="
     for repo in "${repos[@]}"; do
         (
             cd $repo;
@@ -117,7 +117,7 @@ function fetchRepos {
             git fetch >& /dev/null
             branchStatus=$(git status)
             getStatus
-            printf "%${COLSIZE_REPO}.${COLSIZE_REPO}s|\t%${COLSIZE_BRANCH}.${COLSIZE_BRANCH}s|\t%s$status${end}\n" \
+            printf "%${COLSIZE_REPO}.${COLSIZE_REPO}s| %${COLSIZE_BRANCH}.${COLSIZE_BRANCH}s| %s$status${end}\n" \
                     $repoName $currentBranch $statusColor
         ) &
     done
@@ -131,15 +131,15 @@ function getStatus {
     elif grep -q "$INDICATOR_UP_TO_DATE" <<< $branchStatus; then
         status=$STATUS_UP_TO_DATE;
         statusColor=${gry}
-    elif grep -q "$INDICATOR_NO_CHANGES" <<< $branchStatus; then
-        status=$STATUS_NO_CHANGES;
-        statusColor=${gry}
     elif grep -q "$INDICATOR_BEHIND" <<< $branchStatus; then
         status=$STATUS_BEHIND;
         statusColor=${red}
     elif grep -q "$INDICATOR_DIVERGED" <<< $branchStatus; then
         status=$STATUS_DIVERGED;
         statusColor=${red}
+    elif grep -q "$INDICATOR_NO_CHANGES" <<< $branchStatus; then
+        status=$STATUS_NO_CHANGES;
+        statusColor=${gry}
     else
         status=$STATUS_UNKNOWN
         statusColor=${yel}
